@@ -10,17 +10,20 @@ const Contact = () => {
           <input
             type="text"
             placeholder="Your Name"
+            required
             className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <input
             type="email"
             placeholder="Your Email"
+            required
             className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <textarea
             placeholder="Your Message"
+            required
             className="w-full border rounded-lg px-4 py-2 h-28 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
