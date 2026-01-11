@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import {Button} from "@mui/material"
 
 const Signup = () => {
   return (
@@ -44,7 +45,7 @@ const Signup = () => {
         <p className="text-center mt-4 text-gray-600">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 font-semibold">
-            Log in
+          Login
           </Link>
         </p>
       </div>

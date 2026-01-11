@@ -8,7 +8,7 @@ const Header = () => {
     isActive ? "text-black font-semibold" : "text-gray-700 hover:text-black";
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white shadow sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-800">MyWebsite</h1>
 
