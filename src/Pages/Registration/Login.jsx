@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../Services/FirebaseConfig";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,14 +18,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      toast.success("Login successful");
       navigate("/");
     } catch (error) {
-      alert(error.message);
+      toast.error("Invalid email or password");
     }
   };
 
@@ -44,7 +42,6 @@ const Login = () => {
             onChange={handleChange}
             required
           />
-
           <input
             type="password"
             name="password"
@@ -53,7 +50,6 @@ const Login = () => {
             onChange={handleChange}
             required
           />
-
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md text-lg font-medium transition"

@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../Services/FirebaseConfig";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -26,9 +27,10 @@ const Signup = () => {
       await updateProfile(userCred.user, {
         displayName: formData.name,
       });
+      toast.success("Account created successfully");
       navigate("/login");
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -40,37 +42,10 @@ const Signup = () => {
         </h1>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            className="w-full border px-4 py-2 rounded-md"
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            className="w-full border px-4 py-2 rounded-md"
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            className="w-full border px-4 py-2 rounded-md"
-            onChange={handleChange}
-            required
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md text-lg font-medium transition"
-          >
+          <input type="text" name="name" placeholder="Full Name" className="w-full border px-4 py-2 rounded-md" onChange={handleChange} required />
+          <input type="email" name="email" placeholder="Email Address" className="w-full border px-4 py-2 rounded-md" onChange={handleChange} required />
+          <input type="password" name="password" placeholder="Password" className="w-full border px-4 py-2 rounded-md" onChange={handleChange} required />
+          <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md text-lg font-medium transition">
             Sign Up
           </button>
         </form>
