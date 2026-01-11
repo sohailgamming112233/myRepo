@@ -1,6 +1,33 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { useState } from "react";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      navigate("/");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen bg-blue-100 px-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8 border border-blue-300">
@@ -8,18 +35,22 @@ const Login = () => {
           Login Page
         </h1>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <input
             type="email"
+            name="email"
             placeholder="Email Address"
             className="w-full border px-4 py-2 rounded-md"
+            onChange={handleChange}
             required
           />
 
           <input
             type="password"
+            name="password"
             placeholder="Password"
             className="w-full border px-4 py-2 rounded-md"
+            onChange={handleChange}
             required
           />
 
@@ -31,7 +62,7 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="text-center mt-4 ">
+        <p className="text-center mt-4">
           Don’t have an account?{" "}
           <Link to="/signup" className="text-blue-600 font-semibold">
             Sign Up
