@@ -1,20 +1,51 @@
-import { Link } from "react-router-dom";
-import {Button} from "@mui/material"
+import { Link, useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../firebase";
+import { useState } from "react";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      await updateProfile(userCred.user, {
+        displayName: formData.name,
+      });
+      navigate("/login");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen px-4  bg-blue-50">
+    <div className="flex justify-center items-center h-screen px-4 bg-blue-50">
       <div className="w-full max-w-md border border-blue-300 shadow-lg bg-white rounded-xl p-8">
         <h1 className="text-2xl font-bold text-blue-700 text-center mb-6">
           Create Account
         </h1>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <input
             type="text"
             name="name"
             placeholder="Full Name"
             className="w-full border px-4 py-2 rounded-md"
+            onChange={handleChange}
             required
           />
 
@@ -23,6 +54,7 @@ const Signup = () => {
             name="email"
             placeholder="Email Address"
             className="w-full border px-4 py-2 rounded-md"
+            onChange={handleChange}
             required
           />
 
@@ -31,6 +63,7 @@ const Signup = () => {
             name="password"
             placeholder="Password"
             className="w-full border px-4 py-2 rounded-md"
+            onChange={handleChange}
             required
           />
 
@@ -38,14 +71,14 @@ const Signup = () => {
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md text-lg font-medium transition"
           >
-            sign in
+            Sign Up
           </button>
         </form>
 
         <p className="text-center mt-4 text-gray-600">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 font-semibold">
-          Login
+            Login
           </Link>
         </p>
       </div>
