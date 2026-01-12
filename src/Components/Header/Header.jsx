@@ -15,7 +15,9 @@ const Header = () => {
   }, []);
 
   const linkClass = ({ isActive }) =>
-    isActive ? "text-black font-semibold" : "text-gray-700 hover:text-black";
+    isActive
+      ? "text-black font-semibold cursor-pointer"
+      : "text-gray-700 hover:text-black cursor-pointer";
 
   return (
     <header className="bg-white shadow sticky top-0 z-50">
@@ -23,24 +25,16 @@ const Header = () => {
         <h1 className="text-2xl font-bold text-gray-800">MyWebsite</h1>
 
         <nav className="hidden md:flex space-x-6">
-          <NavLink to="/" className={linkClass}>
-            Home
-          </NavLink>
-          <NavLink to="/about" className={linkClass}>
-            About
-          </NavLink>
-          <NavLink to="/contact" className={linkClass}>
-            Contact
-          </NavLink>
+          <NavLink to="/" className={linkClass}>Home</NavLink>
+          <NavLink to="/about" className={linkClass}>About</NavLink>
+          <NavLink to="/contact" className={linkClass}>Contact</NavLink>
 
           {user ? (
-            <span className="font-semibold text-gray-800">
+            <NavLink to="/user" className="font-semibold text-gray-800">
               {user.displayName || user.email}
-            </span>
-          ) : (
-            <NavLink to="/login" className={linkClass}>
-              Login
             </NavLink>
+          ) : (
+            <NavLink to="/login" className={linkClass}>Login</NavLink>
           )}
         </nav>
 
