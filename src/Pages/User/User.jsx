@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../Services/FirebaseConfig";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { signOut, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -34,10 +34,13 @@ const User = () => {
         setFormData(snap.data());
         setHasData(true);
       } else {
-        setFormData((prev) => ({
-          ...prev,
-          name: currentUser.displayName || "",
-        }));
+        setFormData({
+          name: "",
+          age: "",
+          address: "",
+          city: "",
+          country: "",
+        });
         setHasData(false);
       }
     });
@@ -51,10 +54,19 @@ const User = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await setDoc(doc(db, "users", user.uid), formData);
+      await updateProfile(auth.currentUser, {
+        displayName: formData.name,
+      });
+
+      await setDoc(doc(db, "users", auth.currentUser.uid), formData, {
+        merge: true,
+      });
+
+      setHasData(true);
+
       toast.success("Profile saved");
-      navigate("/");
     } catch {
       toast.error("Something went wrong");
     }
@@ -68,7 +80,9 @@ const User = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">
-      <h2 className="text-xl font-bold mb-4">{user?.displayName || user?.email} Settings</h2>
+      <h2 className="text-xl font-bold mb-4">
+        {formData.name || user?.email} Settings
+      </h2>
 
       {!hasData ? (
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -107,7 +121,6 @@ const User = () => {
             placeholder="Country"
             className="w-full border p-2"
           />
-
           <button className="w-full bg-black text-white py-2">Save</button>
         </form>
       ) : (
