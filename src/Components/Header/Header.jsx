@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../Services/FirebaseConfig";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsub();
+  }, []);
 
   const linkClass = ({ isActive }) =>
     isActive ? "text-black font-semibold" : "text-gray-700 hover:text-black";
@@ -22,62 +32,22 @@ const Header = () => {
           <NavLink to="/contact" className={linkClass}>
             Contact
           </NavLink>
-           <NavLink to="/login" className={linkClass}>
-            Login
-          </NavLink> <NavLink to="/signup" className={linkClass}>
-            SignUp
-          </NavLink>
+
+          {user ? (
+            <span className="font-semibold text-gray-800">
+              {user.displayName || user.email}
+            </span>
+          ) : (
+            <NavLink to="/login" className={linkClass}>
+              Login
+            </NavLink>
+          )}
         </nav>
 
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden text-gray-800 text-2xl"
-        >
+        <button onClick={() => setOpen(!open)} className="md:hidden text-2xl">
           ☰
         </button>
       </div>
-
-      {open && (
-        <div className="md:hidden bg-white border-t">
-          <nav className="flex flex-col px-4 py-4 space-y-3">
-            <NavLink
-              onClick={() => setOpen(false)}
-              to="/"
-              className={linkClass}
-            >
-              Home
-            </NavLink>
-            <NavLink
-              onClick={() => setOpen(false)}
-              to="/about"
-              className={linkClass}
-            >
-              About
-            </NavLink>
-            <NavLink
-              onClick={() => setOpen(false)}
-              to="/contact"
-              className={linkClass}
-            >
-              Contact
-            </NavLink>
-             <NavLink
-              onClick={() => setOpen(false)}
-              to="/login"
-              className={linkClass}
-            >
-              Login
-            </NavLink>
-             <NavLink
-              onClick={() => setOpen(false)}
-              to="/signup"
-              className={linkClass}
-            >
-              SignUp
-            </NavLink>
-          </nav>
-        </div>
-      )}
     </header>
   );
 };
